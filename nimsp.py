@@ -1,0 +1,143 @@
+import re
+import urllib
+import urllib2
+from xml.etree import ElementTree
+
+__version__ = '0.1'
+
+
+class NimspApiError(Exception):
+    pass
+
+
+class NimspApiObject(object):
+
+    def __init__(self, xml):
+        for key, value in xml.items():
+            setattr(self, key, value)
+
+        # Convert dollar/year/numeric attrs from strings to ints
+        for key, value in self.__dict__.items():
+            if re.match('^.*_(dollars|records|recipients)$|year', key):
+                setattr(self, key, int(value))
+
+    def __repr__(self):
+        return '%s(%r)' % (self.__class__.__name__, self.__dict__)
+
+
+class Candidate(NimspApiObject):
+
+    def __str__(self):
+        return '%s (%s)' % (self.candidate_name, self.state_postal_code)
+
+    def sectors(self, **params):
+        return nimsp.candidates.sectors(self.imsp_candidate_id, **params)
+
+    def businesses(self, **params):
+        return nimsp.candidates.businesses(self.imsp_candidate_id, **params)
+
+    def industries(self, **params):
+        return nimsp.candidates.industries(self.imsp_candidate_id, **params)
+
+    def top_contributors(self, **params):
+        return nimsp.candidates.top_contributor(self.imsp_candidate_id,
+                                                **params)
+
+
+class Sector(NimspApiObject):
+
+    def __str__(self):
+        return self.sector_name
+
+
+class Business(NimspApiObject):
+
+    def __str__(self):
+        return self.business_name
+
+
+class Industry(NimspApiObject):
+
+    def __str__(self):
+        return self.industry_name
+
+
+class Contributor(NimspApiObject):
+
+    def __str__(self):
+        return self.contributor_name
+
+
+class Office(NimspApiObject):
+
+    def __str__(self):
+        return self.office
+
+
+class nimsp(object):
+
+    apikey = None
+    useragent = 'python-nimsp 0.1'
+
+    @staticmethod
+    def _apicall(method, params):
+        if nimsp.apikey is None:
+            pass
+
+        url = 'http://api.followthemoney.org/%s.php?key=%s&%s' % (
+            method, nimsp.apikey, urllib.urlencode(params))
+
+        try:
+            request = urllib2.Request(url,
+                                      headers={'User-Agent': nimsp.useragent})
+            response = urllib2.urlopen(request)
+            xml = ElementTree.fromstring(response.read())
+
+            if xml.tag == 'error':
+                raise NimspApiError(xml.attrib['text'])
+
+            return xml
+        except urllib2.HTTPError as e:
+            raise NimspApiError(e.read())
+        except ValueError as e:
+            raise NimspApiError('Invalid Response')
+
+
+    class candidates(object):
+
+        @staticmethod
+        def list(**params):
+            xml = nimsp._apicall('candidates.list', params)
+            return [Candidate(c) for c in xml.findall('candidate')]
+
+        @staticmethod
+        def sectors(candidate_id, **params):
+            params['imsp_candidate_id'] = candidate_id
+            xml = nimsp._apicall('candidates.sectors', params)
+            return [Sector(s) for s in xml.findall('candidate_sector')]
+
+        @staticmethod
+        def businesses(candidate_id, **params):
+            params['imsp_candidate_id'] = candidate_id
+            xml = nimsp._apicall('candidates.businesses', params)
+            return [Business(b) for b in xml.findall('candidate_business')]
+
+        @staticmethod
+        def industries(candidate_id, **params):
+            params['imsp_candidate_id'] = candidate_id
+            xml = nimsp._apicall('candidates.industries', params)
+            return [Industry(i) for i in xml.findall('candidate_industry')]
+
+        @staticmethod
+        def top_contributors(candidate_id, **params):
+            params['imsp_candidate_id'] = candidate_id
+            xml = nimsp._apicall('candidates.top_contributors', params)
+            return [Contributor(c) for c in xml.findall('top_contributor')]
+
+
+    class states(object):
+
+        @staticmethod
+        def offices(**params):
+            xml = nimsp._apicall('states.offices', params)
+            return [Office(o) for o in xml.findall('state_office')]
