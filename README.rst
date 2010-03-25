@@ -2,7 +2,7 @@
 python-nimsp
 ============
 
-A Python library for interacting with the `National Institute on Money in State Politics API <http://www.followthemoney.org/services/index.phtml>`.
+A Python library for interacting with the `National Institute on Money in State Politics API <http://www.followthemoney.org/services/index.phtml>`_.
 
 Released under a BSD-style license (see the LICENSE files for details).
 
