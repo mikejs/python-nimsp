@@ -3,7 +3,10 @@ import urllib
 import urllib2
 from xml.etree import ElementTree
 
-__version__ = '0.1'
+__author__ = "Michael Stephens <mstephens@sunlightfoundation.com>"
+__copyright__ = "Copyright (c) 2010 Sunlight Labs"
+__license__ = "BSD"
+__version__ = '0.3'
 
 
 class NimspApiError(Exception):
