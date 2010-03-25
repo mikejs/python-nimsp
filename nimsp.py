@@ -1,6 +1,7 @@
 import re
 import urllib
 import urllib2
+import unicodedata
 from xml.etree import ElementTree
 
 __author__ = "Michael Stephens <mstephens@sunlightfoundation.com>"
@@ -89,6 +90,11 @@ class District(NimspApiObject):
         return "%s %s" % (self.state_name, self.district)
 
 
+def strip_accents(s):
+    if isinstance(s, unicode):
+        return unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
+    return s
+
 class nimsp(object):
 
     apikey = None
@@ -99,8 +105,12 @@ class nimsp(object):
         if nimsp.apikey is None:
             pass
 
+        cleaned = {}
+        for key, param in params.items():
+            cleaned[key] = strip_accents(param)
+
         url = 'http://api.followthemoney.org/%s.php?key=%s&%s' % (
-            method, nimsp.apikey, urllib.urlencode(params))
+            method, nimsp.apikey, urllib.urlencode(cleaned))
 
         try:
             request = urllib2.Request(url,
