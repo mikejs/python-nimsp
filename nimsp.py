@@ -7,7 +7,7 @@ from xml.etree import ElementTree
 __author__ = "Michael Stephens <mstephens@sunlightfoundation.com>"
 __copyright__ = "Copyright (c) 2010 Sunlight Labs"
 __license__ = "BSD"
-__version__ = '0.3.1'
+__version__ = '0.3.2'
 
 
 class NimspApiError(Exception):
@@ -98,7 +98,7 @@ def strip_accents(s):
 class nimsp(object):
 
     apikey = None
-    useragent = 'python-nimsp 0.1'
+    useragent = 'python-nimsp ' + __version__
 
     @staticmethod
     def _apicall(method, params):
