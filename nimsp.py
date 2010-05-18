@@ -95,6 +95,7 @@ def strip_accents(s):
         return unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
     return s
 
+
 class nimsp(object):
 
     apikey = None
@@ -127,7 +128,6 @@ class nimsp(object):
         except ValueError as e:
             raise NimspApiError('Invalid Response')
 
-
     class candidates(object):
 
         @staticmethod
@@ -159,9 +159,7 @@ class nimsp(object):
             xml = nimsp._apicall('candidates.top_contributors', params)
             return [Contributor(c) for c in xml.findall('top_contributor')]
 
-
     class states(object):
-
         class offices(object):
 
             @staticmethod
@@ -202,9 +200,7 @@ class nimsp(object):
             xml = nimsp._apicall('states.top_contributors', params)
             return [Contributor(c) for c in xml.findall('top_contributor')]
 
-
     class elections(object):
-
         class state(object):
 
             @staticmethod
