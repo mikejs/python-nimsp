@@ -7,7 +7,7 @@ from xml.etree import ElementTree
 __author__ = "Michael Stephens <mstephens@sunlightfoundation.com>"
 __copyright__ = "Copyright (c) 2010 Sunlight Labs"
 __license__ = "BSD"
-__version__ = '0.3.2'
+__version__ = '0.3.3'
 
 
 class NimspApiError(Exception):
