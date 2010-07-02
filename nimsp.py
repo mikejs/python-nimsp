@@ -22,7 +22,9 @@ class NimspApiObject(object):
 
         # Convert dollar/year/numeric attrs from strings to ints
         for key, value in self.__dict__.items():
-            if re.match('^.*_(dollars|records|recipients)$|year', key):
+            if re.match('^percent_', key):
+                setattr(self, key, value)
+            elif re.match('^.*_(dollars|records|recipients)$|year', key):
                 setattr(self, key, int(value))
 
     def __repr__(self):
