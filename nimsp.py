@@ -5,9 +5,9 @@ import unicodedata
 from xml.etree import ElementTree
 
 __author__ = "Michael Stephens <mstephens@sunlightfoundation.com>"
-__copyright__ = "Copyright (c) 2010 Sunlight Labs"
+__copyright__ = "Copyright (c) 2011 Sunlight Labs"
 __license__ = "BSD"
-__version__ = '0.3.3'
+__version__ = '0.3.4'
 
 
 class NimspApiError(Exception):
@@ -125,9 +125,9 @@ class nimsp(object):
                 raise NimspApiError(xml.attrib['text'])
 
             return xml
-        except urllib2.HTTPError as e:
+        except urllib2.HTTPError, e:
             raise NimspApiError(e.read())
-        except ValueError as e:
+        except ValueError, e:
             raise NimspApiError('Invalid Response')
 
     class candidates(object):

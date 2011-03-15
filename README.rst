@@ -6,7 +6,7 @@ A Python library for interacting with the `National Institute on Money in State 
 
 Released under a BSD-style license (see the LICENSE files for details).
 
-python-nimsp is a project of Sunlight Labs (c) 2010.
+python-nimsp is a project of Sunlight Labs (c) 2011.
 Written by Michael Stephens <mstephens@sunlightfoundation.com>.
 
 Source: http://github.com/sunlightlabs/python-nimsp
